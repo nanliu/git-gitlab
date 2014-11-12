@@ -58,5 +58,23 @@ module GitlabApi
         raise GitlabApi::Error::ProjectIdNotFound, "Can not find #{pid} Project."
       end
     end
+
+    def target_project_id
+      pid = if @repository.config.keys.include? "gitlab.targetprojectid"
+              @repository.config["gitlab.targetprojectid"].to_i
+            else
+              @repository.config["gitlab.targetproject"]
+            end
+
+      if pid == nil
+        raise "Please set 'git config gitlab.target_projectid ${Gitlab Project id}' of git config gitlab.project ${NAMESPACE/PROJECT}"
+      end
+
+      begin
+        @client.project( URI.encode_www_form_component(pid.to_s)).id
+      rescue Gitlab::Error::NotFound => e
+        raise GitlabApi::Error::ProjectIdNotFound, "Can not find #{pid} Project."
+      end
+    end
   end
 end

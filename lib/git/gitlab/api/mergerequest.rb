@@ -33,7 +33,7 @@ class GitlabApi::ApiClient
 
       begin
         mergerequest = if assignee_id > 0
-          @client.create_merge_request(pid, mr_title, :source_branch => mr_source, :target_branch => target, :assignee_id => assignee_id)
+          @client.create_merge_request(project_id, mr_title, :source_branch => mr_source, :target_branch => target, :assignee_id => assignee_id, :target_project_id => target_project_id )
         else
           @client.create_merge_request(pid, mr_title, :source_branch => mr_source, :target_branch => target)
         end
